@@ -1,0 +1,5 @@
+rootProject.name = 'sorry-google'
+
+include ':verifier'
+include ':contactkeys'
+include ':safetycore'

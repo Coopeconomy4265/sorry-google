@@ -1,0 +1,42 @@
+apply plugin: 'com.android.application'
+
+android {
+    namespace 'com.google.android.safetycore'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId 'com.google.android.safetycore'
+        minSdk 21
+        targetSdk 34
+        versionCode 99999
+        versionName '6.7'
+    }
+
+    signingConfigs {
+        release {
+            def props = new Properties()
+            def localProps = rootProject.file('local.properties')
+            if (localProps.exists()) {
+                props.load(localProps.newDataInputStream())
+            }
+            def ksPath = props.getProperty('KEYSTORE_FILE', '../release.keystore')
+            def ksPass = props.getProperty('KEYSTORE_PASSWORD', '')
+            def ksAlias = props.getProperty('KEY_ALIAS', '')
+            def ksKeyPass = props.getProperty('KEY_PASSWORD', '')
+            if (ksPass) {
+                storeFile file(ksPath)
+                storePassword ksPass
+                keyAlias ksAlias
+                keyPassword ksKeyPass
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt')
+            signingConfig signingConfigs.release
+        }
+    }
+}

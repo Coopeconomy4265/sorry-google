@@ -1,0 +1,85 @@
+name: Build & Release Stub APKs
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Decode keystore from secrets
+        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > release.keystore
+
+      - name: Write local.properties
+        run: |
+          echo "KEYSTORE_FILE=../release.keystore" > local.properties
+          echo "KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}" >> local.properties
+          echo "KEY_ALIAS=${{ secrets.KEY_ALIAS }}" >> local.properties
+          echo "KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> local.properties
+
+      - name: Build all APKs
+        run: ./gradlew assembleRelease
+
+      - name: Collect APK artifacts
+        run: |
+          mkdir -p artifacts
+          for module in verifier contactkeys safetycore; do
+            APK=$(find "$module/build/outputs/apk/release" -name "*.apk" | head -1)
+            if [[ -n "$APK" ]]; then
+              cp "$APK" "artifacts/${module}-release.apk"
+            fi
+          done
+          ls -la artifacts/
+
+      - name: Upload APK artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: stub-apks
+          path: artifacts/*.apk
+          retention-days: 30
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "Sorry Google ${{ github.ref_name }}"
+          body: |
+            ## Sorry Google ${{ github.ref_name }}
+
+            ### Included APKs
+            | APK | Blocks |
+            |-----|--------|
+            | `verifier-release.apk` | Android Developer Verifier |
+            | `contactkeys-release.apk` | Android System Key Verifier |
+            | `safetycore-release.apk` | Android System SafetyCore |
+
+            ### Installation
+            Download the APKs and open them on your phone to install directly.
+          files: |
+            artifacts/verifier-release.apk
+            artifacts/contactkeys-release.apk
+            artifacts/safetycore-release.apk
+          draft: false
+          prerelease: false
